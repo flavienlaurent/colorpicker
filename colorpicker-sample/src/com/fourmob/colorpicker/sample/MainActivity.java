@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.test.R;
 import com.fourmob.colorpicker.ColorPickerDialog;
 import com.fourmob.colorpicker.ColorPickerSwatch.OnColorSelectedListener;
 
