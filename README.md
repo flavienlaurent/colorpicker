@@ -1,3 +1,7 @@
+/!\ ColorPicker is now opensource
+====================================
+https://android.googlesource.com/platform/frameworks/opt/colorpicker/
+
 ColorPicker
 ==================
 
