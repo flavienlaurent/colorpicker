@@ -18,7 +18,7 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.activity_main);
 
 		final ColorPickerDialog colorPickerDialog = new ColorPickerDialog();
-		colorPickerDialog.initialize(R.string.dialog_title, new int[] { Color.CYAN, Color.LTGRAY, Color.BLACK, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.RED, Color.GRAY }, Color.YELLOW, 3, 2);
+		colorPickerDialog.initialize(R.string.dialog_title, new int[] { Color.CYAN, Color.LTGRAY, Color.BLACK, Color.BLUE, Color.GREEN, Color.MAGENTA, Color.RED, Color.GRAY, Color.YELLOW }, Color.YELLOW, 3, 2);
 		colorPickerDialog.setOnColorSelectedListener(new OnColorSelectedListener() {
 
 			@Override

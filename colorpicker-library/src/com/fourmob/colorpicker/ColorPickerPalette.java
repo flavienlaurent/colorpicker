@@ -55,50 +55,64 @@ public class ColorPickerPalette extends TableLayout {
 		return localTableRow;
 	}
 
-	private void setSwatchDescription(int colorIndex, boolean checked, View view) {
-		String contentDescription;
-		if (!checked) {
-			contentDescription = String.format(mDescription, colorIndex);
+	private void setSwatchDescription(int rowNumber, int index, int rowElements, boolean selected,
+									  View swatch) {
+		int accessibilityIndex;
+		if (rowNumber % 2 == 0) {
+			// We're in a regular-ordered row
+			accessibilityIndex = index;
 		} else {
-			contentDescription = String.format(mDescriptionSelected, colorIndex);
+			// We're in a backwards-ordered row.
+			int rowMax = ((rowNumber + 1) * mNumColumns);
+			accessibilityIndex = rowMax - rowElements;
 		}
-		view.setContentDescription(contentDescription);
+
+		String description;
+		if (selected) {
+			description = String.format(mDescriptionSelected, accessibilityIndex);
+		} else {
+			description = String.format(mDescription, accessibilityIndex);
+		}
+		swatch.setContentDescription(description);
 	}
 
 	public void drawPalette(int[] colors, int selectedColor) {
 		if (colors == null) {
 			return;
 		}
-		removeAllViews();
 
-		int numColors = colors.length;
-		int numCreatedColor = 0;
-		TableRow tableRow = createTableRow();
-		int numColorsInRow = 0;
-		int line;
-		do {
-			line = 0;
-			int color = colors[numCreatedColor];
-			ColorPickerSwatch colorPickerSwatch = createColorSwatch(color, selectedColor);
-			setSwatchDescription(numCreatedColor + 1, selectedColor == color, colorPickerSwatch);
-			addSwatchToRow(tableRow, colorPickerSwatch, line);
+		this.removeAllViews();
+		int tableElements = 0;
+		int rowElements = 0;
+		int rowNumber = 0;
 
-			numColorsInRow++;
-			if (numColorsInRow == this.mNumColumns) {
-				addView(tableRow);
-				tableRow = createTableRow();
-				numColorsInRow = 0;
-				line++;
+		// Fills the table with swatches based on the array of colors.
+		TableRow row = createTableRow();
+		for (int color : colors) {
+			tableElements++;
+
+			View colorSwatch = createColorSwatch(color, selectedColor);
+			setSwatchDescription(rowNumber, tableElements, rowElements, color == selectedColor,
+					colorSwatch);
+			addSwatchToRow(row, colorSwatch, rowNumber);
+
+			rowElements++;
+			if (rowElements == mNumColumns) {
+				addView(row);
+				row = createTableRow();
+				rowElements = 0;
+				rowNumber++;
 			}
-
-			numCreatedColor++;
-		} while (numCreatedColor < numColors);
-
-		while (numColorsInRow != this.mNumColumns) {
-			addSwatchToRow(tableRow, createBlankSpace(), line);
-			numColorsInRow++;
 		}
-		addView(tableRow);
+
+		// Create blank views to fill the row if the last row has not been filled.
+		if (rowElements > 0) {
+			while (rowElements != mNumColumns) {
+				addSwatchToRow(row, createBlankSpace(), rowNumber);
+				rowElements++;
+			}
+			addView(row);
+		}
 	}
 
 	public void init(int size, int numColumns, ColorPickerSwatch.OnColorSelectedListener onColorSelectedListener) {
